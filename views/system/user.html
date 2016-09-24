@@ -1,0 +1,338 @@
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">系统用户管理</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body portlet-body" >
+                <table id="userTable" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>用户名</th>
+                        <th>电话</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+
+                    <!-- tbody是必须的 -->
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<!-- 用户编辑弹出框 -->
+<!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#editUserModal">
+    Launch demo modal
+</button>-->
+<!-- 用户角色 弹出框-->
+<div class="modal fade modal-primary" id="editRoleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="roleModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i>提示!</h4>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form role="form" id="roleForm">
+                    <input type="hidden" name="editRoleUserId" />
+                    <input class="form-control"  type="hidden" name="roleId"/>
+                    <div class="box-body">
+                        <div class="form-group roleDIV">
+                            <label ></label>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class=" btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btnRoleSave btn btn-primary">保存角色</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 用户角色 弹出框结束-->
+
+<!-- Modal 用户信息 modal-success  -->
+<div class="modal fade modal-success" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="formALERT" class="alert alert-danger alert-dismissible" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i>提示!</h4>
+                </div>
+
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form" id="userForm">
+
+                        <input class="form-control"  type="hidden"  name="method" />
+                        <input class="form-control"  type="hidden" name="userId"/>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label >用户名</label>
+                                <input type="text" class="form-control edit_userName"  name="userName"  placeholder="用户名" require="true"
+                                       data-container="body" data-toggle="popover" data-placement="bottom" message="请正确输入5个字内的名字" valuetype="chinese-username:1-5" />
+                            </div>
+                            <div class="form-group">
+                                <label>手机号</label>
+                                <input type="text" class="form-control edit_phone"  name="phone" data-container="body" data-toggle="popover" data-placement="bottom" placeholder="手机号" valuetype="phone"  require="true" message="请输入手机号" />
+                            </div>
+                            <div class="form-group password">
+                                  <label >密码</label>
+                                  <input type="password" class="form-control edit_password password" name="password" placeholder="密码"   data-container="body" data-toggle="popover" data-placement="bottom" message="请输入密码"  valuetype="password"  />
+                              </div>
+                              <div class="form-group password">
+                                  <label >确认密码</label>
+                                  <input type="password" class="form-control edit_passwordConfirm password"  placeholder="重复密码" valueEqual="password"    data-container="body" data-toggle="popover" data-placement="bottom"  message="请重复输入密码"  />
+                              </div>
+                        </div>
+
+                    </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class=" btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btnSave btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$(function(){
+    $(".alert").hide();
+    /** 页面加载时获取所有的 **/
+    commonAjax("/role/getAllRoles.do","post","json",false,{},function(result){
+        if(result.data.length > 0){
+            $.each(result.data,function(i,roleObj){
+                var roleSpan = $("<h4><span class='label label-default' roleid='"+roleObj.roleId+"'>"+roleObj.roleName+"</span></h4>");
+                roleSpan.attr("roleId",roleObj.roleId);
+                $(".roleDIV").append(roleSpan);
+                $(".roleDIV").append("  ");
+            });
+        }
+    });
+        var userTable = $('#userTable').DataTable({
+            ajax: {
+                url: "/user/getSystemUserList",
+                type:"post"
+             },
+            pageLength: 10,
+           columns: [{
+            "data": "userId"
+            },{
+            "data": "userName"
+            },{
+             "data": "phone"
+            },{
+               "data": null //此列不绑定数据源，用来显示序号
+           }],
+          "sDom":'<"top"f<"clear">>rt<"bottom"ilp<"clear">>',
+            "fnInitComplete": function (oSettings, json) {
+                 $('<label>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#myModal" id="addFun" class="btn btn-primary" data-toggle="modal" data-target="#editUserModal" data-whatever="newUser">新增</a></label>' + '&nbsp;' +
+                '<label>&nbsp;&nbsp;<a href="#" class="btn btn-danger" id="deleteFun">删除</a></label>' + '&nbsp;').appendTo($('.dataTables_filter'));
+
+           },
+           "columnDefs": [{
+            // "visible": false,
+            //"targets": 0
+             }  ,  {
+                "render": function(data, type, row, meta) {
+                return '<span class="editrow label label-success"  data-toggle="modal"  data-target="#editUserModal" data-whatever="编辑用户信息">编辑</span>&nbsp;&nbsp;&nbsp;' +
+                        '<span class="editRoleBTN label label-primary"  data-toggle="modal"  data-target="#editRoleModal" data-whatever="编辑用户角色信息" data-userid="'+data.userId+'">角色</span>&nbsp;&nbsp;&nbsp;' +
+                        '<a target="_blank" href="javascript:void(0);" onclick="deleteSystemUser('+row.userId+')"><span class="label label-danger">删除</span></a>';
+                },
+            //指定是第三列
+             "targets":3
+           }
+           ]
+
+        });
+
+         //前台添加序号
+    userTable.on('order.dt search.dt',function() {
+          /*   t.column(3, {
+                 "search": 'applied',
+                 "order": 'applied'
+             }).nodes().each(function(cell, i) {
+             cell.innerHTML = "<input type='checkbox' />";
+             });*/
+        userTable.column(0,{}).nodes().each(function(cell,i){
+                 cell.innerHTML= i + 1;
+             });
+         }).draw();
+
+   $(".portlet-body").on('click', 'span.editrow', function () {
+        var data = $("#userTable").DataTable().row($(this).parents("tr")).data();
+        $("#editUserModal").data("userData",null);
+       $("#editUserModal").data("userData",data);
+   });
+    /** 点击角色,获取数据 **/
+    $(".portlet-body").on('click', 'span.editRoleBTN', function () {
+        var data = $("#userTable").DataTable().row($(this).parents("tr")).data();
+        $("#editRoleModal").data("roleData",null);
+        $("#editRoleModal").data("roleData",data.role);
+        $("#editRoleModal").data("userData",data);
+
+    });
+
+    /**弹出编辑角色的窗口**/
+    $('#editRoleModal').on('show.bs.modal', function (event) {
+        var roleObj  = $(this).data("roleData");
+        var userData = $(this).data("userData");
+        $("input[name='editRoleUserId']").val(userData.userId);
+        $(".roleDIV label").html(userData.userName+" 的角色:");
+        var roleArray = roleObj.split(",");
+        if(roleArray[0].split("-") != 0){
+            $.each(roleArray,function(i,role){
+                $(".roleDIV span[roleid='"+role.split("-")[0]+"']").removeClass("label-default").addClass("label-success");
+            });
+        }
+    });
+    /** 关闭角色选择框监听事件 **/
+    $('#editRoleModal').on('hide.bs.modal', function (event) {
+        $.each( $(".roleDIV span"),function(i,roleObj){
+                $(roleObj).removeClass("label-success").addClass("label-default");
+        });
+    });
+    /** 选择角色span **/
+    $(".roleDIV span").on("click",function(){
+        var removeClass="",addClass="";
+        if($(this).attr("class").indexOf("label-default")==-1){
+            removeClass="label-success";
+            addClass   ="label-default";
+        }
+        if($(this).attr("class").indexOf("label-default")>0){
+            removeClass="label-default";
+            addClass   ="label-success";
+        }
+        $(this).removeClass(removeClass).addClass(addClass);
+    });
+
+    /** 保存用户角色 **/
+    $(".btnRoleSave").on("click",function(){
+        var btnOBJ = $(this);
+        var userId = $("input[name='editRoleUserId']").val();
+        var userRoleList =  new Array();
+
+        var userRoleData={
+            userId:"",
+            roleId:""
+        }
+        $.each( $(".roleDIV span"),function(i,userRole){
+            if($(this).attr("class").indexOf("label-success")>0){
+                userRoleData = new Object();
+                userRoleData.userId = userId;
+                userRoleData.roleId = $(this).attr("roleid");
+                userRoleList.push(userRoleData);
+            }
+        });
+        var subObj ={};
+        subObj.userRole =JSON.stringify(userRoleList);
+        subObj.access_token=token;
+        commonAjax("/role/saveUserRole.do","post","json",false,subObj,function(result){
+            formALERT(btnOBJ,result,function(formAlert){
+                if(result.status){
+                    userTable.ajax.reload();
+                    setTimeout(function(){
+                        $("#editRoleModal").modal("hide");
+                        formAlert.append("");
+                        formAlert.hide();
+                    },1000);
+                }
+            });
+        });
+    });
+
+    /**   初始化编辑用户弹出框   **/
+     $('#editUserModal').on('show.bs.modal', function (event) {
+         $(".btnSave").show();
+        var userObj =$(this).data("userData");
+        var modal = $(this);
+         var button = $(event.relatedTarget);
+         var title = button.data('whatever');
+         $("#formALERT").hide();
+         if(title == "newUser"){
+             $(".password").show();
+             modal.find("input").val("");
+             modal.find("input[name='userId']").val("0");
+             modal.find("input[name='method']").val(title);
+             title = "新增用户";
+         }else{
+           $(".password").hide();
+             modal.find("input[name='editType']").val(title);
+             modal.find(".edit_userName").val(userObj.userName);
+             modal.find(".edit_phone").val(userObj.phone);
+             modal.find("input[name='userId']").val(userObj.userId);
+             modal.find("input[name='method']").val(title);
+         }
+         modal.find('.modal-title').text(title);
+    });
+    $('#editUserModal').on('hide.bs.modal', function (event) {
+        $("#userForm [data-toggle='popover']").popover("hide");
+    });
+    /***修改 或者 新增 **/
+    $(".btnSave").on('click',function(){
+        $(this).hide();
+        var returnV = commonFormValidate("userForm");
+        if(returnV){
+            /*组织返回数据*/
+            var subObj ={};
+            subObj.user =commonSerializeFormData("userForm");
+            subObj.access_token=token;
+
+            commonAjax("/user/saveSystemUser.do","post","json",false,subObj,function(result){
+                $("#formALERT").append("");
+                if(result.status){
+                    $("#formALERT").removeClass("alert-danger");
+                    $("#formALERT").addClass("alert-success");
+                    $("#formALERT").show();
+                    $("#formALERT").append("保存成功!");
+                    userTable.ajax.reload();
+                   setTimeout(function(){
+                       $('#editUserModal').modal("hide");
+                       $("#formALERT").append("");
+                   },1000);
+                }else{
+                    $("#formALERT").removeClass("alert-success");
+                    $("#formALERT").addClass("alert-danger");
+                    $("#formALERT").append(result.msg);
+                    $("#formALERT").show();
+                    $(".btnSave").show();
+                }
+            });
+        }else{
+            $(".btnSave").show();
+        }
+    });
+});
+
+    /**删除用户**/
+    function deleteSystemUser(userId){
+        commonAjax("/user/deleteSystemUserById.do","post","json",true,{access_token:token},function(result){
+            alert(result.msg);
+        });
+    }
+</script>

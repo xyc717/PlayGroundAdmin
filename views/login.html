@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <title><%=title%></title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="/template/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/template/plugins/font-awesome/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/template/plugins/ionicons/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/template//dist/css/AdminLTE.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="/template/plugins/iCheck/square/blue.css">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="/template/plugins/html5shiv/html5shiv.min.js"></script>
+  <script src="/template/plugins/respond/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="../../index2.html"><b><%=title%></b>CRM</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">请登录</p>
+
+    <form action="/loginInto" method="post">
+      <div class="form-group has-feedback">
+        <input type="text" id="userMobile" name="userPhone" class="form-control" pattern="^1[3-9]\d{9}$" placeholder="手机号" required>
+        <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+      </div>
+      <div class="form-group has-feedback">
+        <input type="password" id="passwordInput" name="password" class="form-control" placeholder="密码" pattern="^[A-z\d]{6,12}$" required>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+          <div class="checkbox icheck">
+            <label>
+              <input type="checkbox"> 记住我
+            </label>
+          </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+
+
+    <!-- /.social-auth-links -->
+
+    <a href="#">忘记密码</a><br>
+    <a href="register.html" class="text-center">注册</a>
+
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery 2.2.3 -->
+<script src="/template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="/template/bootstrap/js/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="/template/plugins/iCheck/icheck.min.js"></script>
+
+<script>
+ //用户名的验证
+ document.getElementById("userMobile").oninput=function(){
+   document.getElementById("userMobile").setCustomValidity("");
+ };
+ document.getElementById("userMobile").oninvalid=function(){
+   document.getElementById("userMobile").setCustomValidity("请正确输入手机号");
+ };
+ document.getElementById("passwordInput").oninput=function(){
+   document.getElementById("passwordInput").setCustomValidity("");
+ };
+ document.getElementById("passwordInput").oninvalid=function(){
+   document.getElementById("passwordInput").setCustomValidity("密码长度有误");
+ };
+
+
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<link rel="stylesheet" href="/template/plugins/jQuery/nesttable.css">
+<div class="row">
+    <script src="/template/plugins/jQuery/jquery.nestable.js"></script>
+    <div class="col-xs-12">
+
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">系统菜单管理</h3>
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body portlet-body" ><button class="btn btn-info" data-toggle="modal" data-whatever="新增菜单" data-target="#editMenuModal">新增菜单</button>
+                <div class="dd" id="nestable">
+                    <% menuList.forEach(function(parentMenuObj){ %>
+                    <ol class="dd-list" menuid="<%=parentMenuObj.menuId%>">
+                       <li class="dd-item dd-collapsed" data-id="5">
+                            <div class="dd-handle">
+                                <i class="icon-dashboard"></i>
+                                <span class="menuname"><%= parentMenuObj.menuName%></span>
+                                <!--<span class="orange">get</span>-->
+                            <!--    <span style="color:#1e90ff">是</span>
+                                <span style="color:#1e90ff">有效</span>-->
+                                <div class="pull-right action-buttons menudata" menuid="<%=parentMenuObj.menuId%>" path="<%=parentMenuObj.path%>" parentid="<%=parentMenuObj.parentId%>" level = "<%=parentMenuObj.level%>" is_delete="<%=parentMenuObj.is_delete%>" menuname="<%=parentMenuObj.menuName%>">
+                                    <a class="menuEditBTN label label-success" href="#"  data-toggle="modal" data-whatever="修改：<%=parentMenuObj.menuName%>" data-target="#editMenuModal">
+                                        <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                        修改
+                                    </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a class="menuDeleteBTN label label-danger" href="#"  data-toggle="modal" data-whatever="删除<%=parentMenuObj.menuName%>?" data-target="#deleteMenuModal"  >
+                                        <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                        删除
+                                    </a>
+                                </div>
+                            </div>
+                            <!--子菜单开始-->
+                            <ol class="dd-list" style="display: none;">
+                                <%if(null != parentMenuObj.subMenu ){
+                                parentMenuObj.subMenu.forEach(function(subObj){
+                                %>
+                                <li class="dd-item" data-id="1" menuid="<%=subObj.menuId%>">
+                                    <div class="dd-handle">
+                                       <span class="menuname"><%=subObj.menuName%></span>
+                                        <span class="orange menupath"><%=subObj.path%></span>
+                                       <!-- <span style="color:#1e90ff">是</span>
+                                        <span style="color:#1e90ff">有效</span>-->
+                                        <div class="pull-right action-buttons menudata" menuid="<%=subObj.menuId%>" path="<%=subObj.path%>" parentid="<%=subObj.parentId%>" level = "<%=subObj.level%>" is_delete="<%=subObj.is_delete%>" menuname="<%=subObj.menuName%>">
+                                            <a class="menuEditBTN label label-success" href="#"  data-toggle="modal" data-whatever="修改：<%=subObj.menuName%>" data-target="#editMenuModal" >
+                                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                                                修改
+                                            </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a class="menuDeleteBTN label label-danger" href="#" data-toggle="modal" data-whatever="删除<%=subObj.menuName%>?" data-target="#deleteMenuModal" >
+                                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                                                删除
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <%}); } %>
+                            </ol>
+                        </li>
+                    </ol>
+                    <%})%>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+
+<!-- 确认删除 弹出框-->
+<div class="modal fade modal-danger" id="deleteMenuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="roleModalTitle"></h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger alert-dismissible" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i>提示!</h4>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                 确认删除？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class=" btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btnMenuDelete btn btn-primary">确认删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 用户角色 弹出框结束-->
+
+<!-- Modal 用户信息 modal-success  -->
+<div class="modal fade modal-success" id="editMenuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-danger alert-dismissible" aria-hidden="true">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-ban"></i>提示!</h4>
+                </div>
+
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form role="form" id="menuForm">
+                        <input class="form-control"  type="hidden" name="method" />
+                        <input class="form-control"  type="hidden" name="menuId"/>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label >菜单名</label>
+                                <input type="text" class="form-control edit_menuName"  name="menuName"  placeholder="菜单名" require="true"
+                                       data-container="body" data-toggle="popover" data-placement="bottom" message="请正确输入10个字内" valuetype="chinese-username:1-10" />
+                            </div>
+                            <div class="form-group">
+                                <label>上级菜单</label>
+                               <select class="form-control" name="parentId">
+                                   <option value="0">无</option>
+                                   <% menuList.forEach(function(parentMenu){%>
+                                   <option value="<%=parentMenu.menuId%>"><%=parentMenu.menuName%></option>
+                                   <%});%>
+                               </select>
+                            </div>
+                            <div class="form-group parentNoPath">
+                                  <label >菜单地址</label>
+                                  <input type="text" class="form-control edit_path" name="path" placeholder="菜单地址"   data-container="body" data-toggle="popover" data-placement="bottom" message="请正确输入菜单地址"  valuetype="length:3-25"  />
+                              </div>
+                              <div class="form-group">
+                                  <label >顺序</label>
+                                  <input type="number" class="form-control edit_level"  name="level" placeholder="顺序"     data-container="body" data-toggle="popover" data-placement="bottom"  message="请输入排序序号" value="0"  />
+                              </div>
+                        </div>
+
+                    </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class=" btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btnMenuSave btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function(){
+    $("#menuForm select[name='parentId']").val(0);
+    $("#menuForm input[name='menuName']").val("");
+    $("#menuForm input[name='level']").val(0);
+    $("#menuForm input[name='path']").val("");
+    $("#menuForm input[name='method']").val("new");
+    $("#menuForm input[name='menuId']").val(0);
+
+    $(".alert").hide();
+    $('.dd').nestable();
+    $('.dd-handle a').on('mousedown', function(e){
+        e.stopPropagation();
+    });
+    /** 点击 删除按钮 赋值 **/
+    $(".menuDeleteBTN").on("click",function(){
+        var menuId = $(this).parent().attr("menuid");
+        var parentId = $(this).parent().attr("parentid");
+        $('.btnMenuDelete').attr("menuid",menuId);
+        $('.btnMenuDelete').attr("parentid",parentId);
+    });
+
+    $(".menuEditBTN").on("click",function(){
+        var menuId = $(this).parent().attr("menuid");
+        $("#menuForm input[name='menuId']").val(menuId);
+        $("#menuForm input[name='method']").val("edit");
+        var menuObj = $(this).parent();
+        $("#menuForm select[name='parentId']").val(menuObj.attr("parentid"));
+        $("#menuForm input[name='menuName']").val(menuObj.attr("menuname"));
+        $("#menuForm input[name='level']").val(menuObj.attr("level"));
+        $("#menuForm input[name='path']").val(menuObj.attr("path"));
+        if(menuObj.attr("parentid") == 0){
+            $(".parentNoPath").hide();
+        }else{
+            $(".parentNoPath").show();
+        }
+
+    });
+    /**  点击确认删除 **/
+    $(".btnMenuDelete").on("click",function(){
+        var menuId = $(this).attr("menuid");
+        var parentId=$(this).attr("parentid");
+        var btnDelete = $(this);
+        btnDelete.hide();
+        commonAjax("/menu/deleteMenu.do","post","json",false,{menuId:menuId,access_token:token},function(result){
+            if(result.status){
+                btnDelete.parent().parent().find(".alert").removeClass("alert-danger").addClass("alert-success").show().append("删除成功");
+                btnDelete.parent().parent().find(".alert .fa").removeClass("fa-ban").addClass("fa-check");
+                if(parentId == 0){
+                    $("ol[menuid='"+menuId+"']").remove();
+                }else{
+                    $("li[menuid='"+menuId+"']").remove();
+                }
+                setTimeout(function(){
+                    $('#deleteMenuModal').modal("hide");
+                    btnDelete.show();
+                },1200);
+            }else{
+                btnDelete.parent().parent().find(".alert").removeClass("alert-success").addClass("alert-danger").show().append(result.msg);
+                btnDelete.parent().parent().find(".alert .fa").removeClass("fa-check").addClass("fa-ban");
+                btnDelete.show();
+            }
+        });
+    });
+
+
+    /** 点击 删除按钮 弹出modal框提示是否删除 **/
+    /** 关闭角色选择框监听事件 **/
+    $('#deleteMenuModal').on('hide.bs.modal', function (event) {
+        $(this).parent().parent().find(".alert").append("").hide();
+    });
+    $('#editMenuModal').on('hide.bs.modal', function (event) {
+        $(this).parent().parent().find(".alert").append("").hide();
+        $("#menuForm select[name='parentId']").val(0);
+        $("#menuForm input[name='menuName']").val("");
+        $("#menuForm input[name='level']").val(0);
+        $("#menuForm input[name='path']").val("");
+        $("#menuForm input[name='method']").val("new");
+        $("#menuForm input[name='menuId']").val(0);
+    });
+
+    $('#editMenuModal').on('show.bs.modal', function (event) {
+        $(this).parent().parent().find(".alert").append("").hide();
+        var button = $(event.relatedTarget);
+        var title = button.data('whatever');
+        $(this).find('.modal-title').text(title);
+    });
+    /**弹出编辑角色的窗口**/
+    $('#deleteMenuModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var title = button.data('whatever');
+        $(this).find('.modal-title').text(title);
+    });
+    $(".btnMenuSave").on("click",function(){
+        var btnSave = $(this);
+        var returnV = commonFormValidate("menuForm");
+        if(returnV){
+            var subObj ={};
+            subObj.menu =commonSerializeFormData("menuForm");
+            subObj.access_token=token;
+
+           commonAjax("/menu/saveSystemMenu.do","post","json",false,subObj,function(result){
+                if(result.status){
+                    btnSave.parent().parent().find(".alert").removeClass("alert-danger").addClass("alert-success").show().append(result.msg);
+                    btnSave.parent().parent().find(".alert .fa").removeClass("fa-ban").addClass("fa-check");
+                    var menuData = JSON.parse(subObj.menu);
+                    var controlObj = menuData.parentId == 0 ? $("ol[menuid='"+menuData.menuId+"']"):$("li[menuid='"+menuData.menuId+"']");
+                    controlObj.find(".menudata").attr("menuid",menuData.menuId);
+                    controlObj.find(".menudata").attr("parentid",menuData.parentId);
+                    controlObj.find(".menudata").attr("menuname",menuData.menuName);
+                    controlObj.find(".menudata").attr("level",menuData.level);
+                    controlObj.find(".menudata").attr("is_delete",menuData.is_delete);
+                    controlObj.find(".menuname").text(menuData.menuName);
+                    controlObj.find(".menupath").text(menuData.path);
+                    setTimeout(function(){
+                        $('#editMenuModal').modal("hide");
+                        btnSave.show();
+                    },1200);
+                }else{
+                    btnSave.parent().parent().find(".alert").removeClass("alert-success").addClass("alert-danger").show().append(result.msg);
+                    btnSave.parent().parent().find(".alert .fa").removeClass("fa-check").addClass("fa-ban");
+                    btnSave.show();
+                }
+
+            });
+        }else{
+            btnSave.show();
+        }
+    });
+});
+</script>
